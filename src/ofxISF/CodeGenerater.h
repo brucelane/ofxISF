@@ -127,10 +127,17 @@ protected:
 				uniform int PASSINDEX;
 				uniform vec2 RENDERSIZE;
 				varying vec2 vv_FragNormCoord;
+                varying vec3 vv_VertNorm;
+                varying vec3 vv_VertPos;
+                      
 
 				void vv_vertShaderInit(void)
 				{
-					gl_Position = ftransform();
+					gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
+                    gl_FrontColor = gl_Color;
+                    gl_TexCoord[0] = gl_MultiTexCoord0;
+                    vv_VertPos = gl_Vertex.xyz;
+                    vv_VertNorm = gl_Normal.xyz;
 					vv_FragNormCoord = vec2(gl_MultiTexCoord0.x, gl_MultiTexCoord0.y);
 				}
 
@@ -150,6 +157,8 @@ protected:
 				uniform int PASSINDEX;
 				uniform vec2 RENDERSIZE;
 				varying vec2 vv_FragNormCoord;
+                varying vec3 vv_VertNorm;
+                varying vec3 vv_VertPos;
 				uniform float TIME;
 
 				$UNIFORMS$
