@@ -19,11 +19,25 @@ public:
 		
 		chain.setup(1280, 720);
 		ofDirectory dir;
-        dir.listDir(ofToDataPath(""));
+        
+        
+        //         This is the local ISF folder in bin/data/ISF
+        dir.listDir(ofToDataPath("ISF"));
+        
+        //        use the following line for the VDMX ISF directory
+        //        dir.listDir("/Library/Graphics/ISF");
+        
+        
         dir.sort();
+        int count = 0;
         for(int i = 0; i < dir.size(); i++){
-            chain.load(dir.getPath(i));
-            chain.setEnable(i, false);
+            // Multi Pass Gaussian and Layer Masks are currently broken in OF
+            if(!ofIsStringInString(dir.getPath(i), "Multi Pass Gaussian") && !ofIsStringInString(dir.getPath(i), "Layer Mask")){
+                cout<<dir.getPath(i)<<endl;
+                chain.load(dir.getPath(i));
+                chain.setEnable(count, false);
+                count++;
+            }
         }
         index = 0;
         chain.setImage(video.getTextureReference());
