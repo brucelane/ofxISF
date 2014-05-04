@@ -19,15 +19,16 @@ public:
 		
 		chain.setup(1280, 720);
 		ofDirectory dir;
-        
+        dir.allowExt("fs");
+        dir.allowExt("vs");
         
         //         This is the local ISF folder in bin/data/ISF
-        dir.listDir(ofToDataPath("ISF"));
+        dir.listDir(ofToDataPath("ISF-Folder"));
         
         //        use the following line for the VDMX ISF directory
         //        dir.listDir("/Library/Graphics/ISF");
         
-        
+    
         dir.sort();
         int count = 0;
         for(int i = 0; i < dir.size(); i++){
