@@ -48,7 +48,7 @@ public:
 		return true;
 	}
 	
-	void update()
+	void update(float time = ofGetElapsedTimef())
 	{
 		if (passes.empty()) return;
 		
@@ -61,7 +61,7 @@ public:
 			
 			Shader *o = p.shader;
 			o->setImage(tex);
-			o->update();
+			o->update(time);
 			tex = &o->getTextureReference();
 		}
 		

@@ -26,7 +26,7 @@ public:
         dir.listDir(ofToDataPath("ISF-Folder"));
         
         //        use the following line for the VDMX ISF directory
-        //        dir.listDir("/Library/Graphics/ISF");
+        //dir.listDir("/Library/Graphics/ISF");
         
     
         dir.sort();
@@ -34,10 +34,10 @@ public:
         for(int i = 0; i < dir.size(); i++){
             // Multi Pass Gaussian and Layer Masks are currently broken in OF
             if(!ofIsStringInString(dir.getPath(i), "Multi Pass Gaussian") && !ofIsStringInString(dir.getPath(i), "Layer Mask")){
-                cout<<dir.getPath(i)<<endl;
-                chain.load(dir.getPath(i));
-                chain.setEnable(count, false);
-                count++;
+                if(chain.load(dir.getPath(i))){
+                    chain.setEnable(count, false);
+                    count++;
+                }
             }
         }
         index = 0;

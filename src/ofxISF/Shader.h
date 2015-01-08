@@ -48,7 +48,7 @@ public:
 		return true;
 	}
 
-	void update()
+	void update(float time)
 	{
 		const vector<Ref_<ImageUniform> >& images = uniforms.getImageUniforms();
 		bool need_reload_shader = false;
@@ -69,7 +69,7 @@ public:
 		
 		if (passes.empty())
 		{
-			render_pass(0);
+			render_pass(0, time);
 		}
 		else
 		{
@@ -84,7 +84,7 @@ public:
 				{
 					current_framebuffer = &framebuffer_map["DEFAULT"];
 				}
-				render_pass(i);
+				render_pass(i, time);
 			}
 		}
 	}
@@ -248,7 +248,7 @@ protected:
 
 protected:
 	
-	void render_pass(int index)
+	void render_pass(int index, float time)
 	{
 		if (!shader.isLoaded()) return;
 		
@@ -261,7 +261,7 @@ protected:
 		shader.begin();
 		shader.setUniform1i("PASSINDEX", index);
 		shader.setUniform2fv("RENDERSIZE", render_size.getPtr());
-		shader.setUniform1f("TIME", ofGetElapsedTimef());
+		shader.setUniform1f("TIME", time);
 		
 		ImageUniform::resetTextureUnitID();
 		
