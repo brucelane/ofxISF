@@ -9,7 +9,7 @@ public:
 
 	ofxISF::Chain chain;
 	ofVideoGrabber video;
-
+	int index;
 		void setup();
 		void update();
 		void draw();
