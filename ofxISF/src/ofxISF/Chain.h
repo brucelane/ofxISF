@@ -118,6 +118,9 @@ public:
 		pass_map[name]->enabled != pass_map[name]->enabled;
 	}
 
+    ofTexture& getTextureReference(){
+        return *result;
+    }
 protected:
 	
 	int internalformat;

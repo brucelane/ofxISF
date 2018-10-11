@@ -86,11 +86,10 @@ public:
 	
 	void removeUniform(const string& key)
 	{
-		if (!hasUniform(key)) {
-			uniforms_map.erase(key);
-			updateCache();
-		}
+		if (hasUniform(key)) return false;
 		
+		uniforms_map.erase(key);
+		updateCache();
 	}
 	
 	template <typename T0, typename T1>

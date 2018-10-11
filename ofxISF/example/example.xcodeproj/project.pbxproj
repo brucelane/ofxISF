@@ -82,8 +82,8 @@
 		E75A2864187DF217006E7860 /* jsonxx.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jsonxx.cc; sourceTree = "<group>"; };
 		E75A2865187DF217006E7860 /* jsonxx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jsonxx.h; sourceTree = "<group>"; };
 		E75A2866187DF217006E7860 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
-		E75A2868187DF217006E7860 /* ofxISF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxISF.h; sourceTree = "<group>"; };
-		E78825EB18AC1A5F004094F4 /* CodeGenerater.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CodeGenerater.h; sourceTree = "<group>"; };
+		E75A2868187DF217006E7860 /* ofxISF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxISF.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		E78825EB18AC1A5F004094F4 /* CodeGenerater.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CodeGenerater.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		E78825EC18AC1A5F004094F4 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		E78825ED18AC1A5F004094F4 /* JSONParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSONParser.h; sourceTree = "<group>"; };
 		E78825EE18AC1A5F004094F4 /* Params.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Params.h; sourceTree = "<group>"; };
