@@ -18,7 +18,7 @@ public:
 
 	typedef Ref_<Uniform> Ref;
 
-	Uniform(const string& name, unsigned int type_id) : name(name), type_id(type_id)
+	Uniform(const string& name, size_t type_id) : name(name), type_id(type_id)
 	{}
 	virtual ~Uniform() {}
 
@@ -27,7 +27,9 @@ public:
 	template <typename TT>
 	bool isTypeOf() const { return Type2Int<TT>::value() == type_id; }
 	
-	unsigned int getTypeID() const { return type_id; }
+	size_t getTypeID() const { return type_id; }
+
+    virtual ofAbstractParameter& getParameter() = 0;
 
 protected:
 
@@ -35,7 +37,7 @@ protected:
 	friend class Shader;
 	
 	string name;
-	unsigned int type_id;
+	size_t type_id;
 
 	virtual string getUniform() const = 0;
 	virtual void update(ofShader *shader) = 0;
@@ -46,61 +48,65 @@ protected:
 class Uniforms
 {
 public:
+    ofParameterGroup parameters;
+
+    Uniforms() {
+        parameters.setName("uniforms");
+    }
+
+    ofParameterGroup getParams() {
+        return parameters;
+    }
 
 	size_t size() const
 	{
 		return uniforms.size();
 	}
 	
-	Uniform::Ref getUniform(size_t idx) const
-	{
+    Uniform::Ref getUniform(size_t idx) const {
 		return uniforms.at(idx);
 	}
 	
-	Uniform::Ref getUniform(const string& key) const
-	{
+    Uniform::Ref getUniform(const string& key) const {
 		if (uniforms_map.find(key) == uniforms_map.end()) return Uniform::Ref();
 		return uniforms_map[key];
 	}
 	
-	bool hasUniform(const string& key) const
-	{
+    bool hasUniform(const string& key) const {
 		return uniforms_map.find(key) != uniforms_map.end();
 	}
 
-	const vector<Ref_<ImageUniform> >& getImageUniforms() const
-	{
+    const vector<Ref_<ImageUniform> >& getImageUniforms() const {
 		return image_uniforms;
 	}
 
 public:
 	
-	bool addUniform(const string& key, Uniform::Ref uniform)
-	{
+    bool addUniform(const string& key, Uniform::Ref uniform) {
 		if (hasUniform(key)) return false;
-		
+
 		uniforms_map[key] = uniform;
+        parameters.add(uniform->getParameter());
 		updateCache();
 		return true;
 	}
 	
 	void removeUniform(const string& key)
 	{
-		if (!hasUniform(key)) {
-			uniforms_map.erase(key);
-			updateCache();
-		}
+		if (!hasUniform(key)) return;
 		
+		uniforms_map.erase(key);
+		updateCache();
 	}
 	
 	template <typename T0, typename T1>
 	void setUniform(const string& name, const T1& value);
 
-	void clear()
-	{
+    void clear() {
 		uniforms.clear();
 		uniforms_map.clear();
 		image_uniforms.clear();
+        parameters.clear();
 	}
 
 protected:
@@ -121,28 +127,40 @@ public:
 
 	typedef T Type;
 
+    ofParameter<T> parameter;
 	T value;
 	T min, max;
 	bool has_range;
 
-	Uniform_(const string& name, const T& default_value = T()) : Uniform(name, Type2Int<T>::value()), value(default_value), has_range(false) {}
+    Uniform_(const string& name, const T& default_value = T()) : Uniform(name, Type2Int<T>::value()), value(default_value), has_range(false) {
+        parameter.set(name, default_value);
+        parameter.addListener(this, &Uniform_::onParameterChange);
+    }
 
-	void setRange(const T& min_, const T& max_)
-	{
+    ofAbstractParameter& getParameter() {
+        return parameter;
+    }
+
+    void onParameterChange(T & _v) {
+        value = _v;
+    }
+
+    void setRange(const T& min_, const T& max_) {
 		has_range = true;
 		min = min_;
 		max = max_;
-	}
+        parameter.setMin(min_);
+        parameter.setMax(max_);
+    }
 
 	template <typename TT>
-	void set(const TT& v)
-	{
+    void set(const TT& v) {
 		value = v;
+        parameter = v;
 	}
 
 	template <typename TT>
-	TT get() const
-	{
+    TT get() const {
 		TT v = value;
 		return v;
 	}
@@ -336,6 +354,36 @@ protected:
 	}
 };
 
+/* long type in ISF is used for mode settings, select type lists
+ */
+class LongUniform : public Uniform_<int> {
+public:
+
+    LongUniform(const string& name, const int& default_value = Type()) : Uniform_(name, default_value) {
+        setRange(0, 0);
+    }
+
+    void update(ofShader *shader) {
+        if (has_range) value = ofClamp(value, min, max);
+        shader->setUniform1i(name, value);
+    }
+
+    vector<int>    values;
+    vector<string> labels;
+    void pushValue(const int& value, const string & label) {
+        values.push_back(value);
+        labels.push_back(label);
+        setRange(0, values.size()-1);
+    }
+
+protected:
+
+    string getUniform() const {
+        string s = "uniform int $NAME$;";
+        ofStringReplace(s, "$NAME$", getName());
+        return s;
+    }
+};
 //
 
 template <typename INT_TYPE, typename EXT_TYPE>

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ofMain.h"
+
 #define OFX_ISF_BEGIN_NAMESPACE namespace ofx { namespace ISF {
 #define OFX_ISF_END_NAMESPACE } }
 
@@ -20,10 +22,11 @@ struct Ref_ : public ofPtr<T>
 template <typename T>
 struct Type2Int
 {
-	static unsigned int value()
+	static size_t value()
 	{
 		static size_t m = 0;
-		return (unsigned int)&m;
+        //return dynamic_cast<unsigned int>(&m);
+		return (size_t)&m;
 	}
 };
 
